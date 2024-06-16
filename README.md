@@ -1,24 +1,24 @@
-# Alpine
+# Aria2
 
-[![Alpine](http://dockeri.co/image/snowdreamtech/alpine)](https://hub.docker.com/r/snowdreamtech/alpine)
+[![Aria2](http://dockeri.co/image/snowdreamtech/aria2)](https://hub.docker.com/r/snowdreamtech/aria2)
 
-Docker Image packaging for Alpine. (amd64, arm32v6, arm32v7, arm64v8, i386, ppc64le,riscv64, s390x)
+Docker Image packaging for Aria2. (amd64, arm32v6, arm32v7, arm64v8, i386, ppc64le,riscv64, s390x)
 
 # Run
 
 ```bash
-docker run --rm snowdreamtech/alpine:latest
+docker run --restart=always -d -p 6800:6800 -p 6881-6999:6881-6999 snowdreamtech/aria2:latest
 ```
 
 ```bash
-docker run -e TZ=Asia/Shanghai --rm snowdreamtech/alpine:latest
+docker run --restart=always -d -e TZ=Asia/Shanghai -p 6800:6800 -p 6881-6999:6881-6999 snowdreamtech/aria2:latest
 ```
 
 # Development
 
 ```bash
 docker buildx create --use --name build --node build --driver-opt network=host
-docker buildx build -t snowdreamtech/alpine --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x . --push
+docker buildx build -t snowdreamtech/aria2 --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x . --push
 ```
 
 ## Reference
