@@ -6,7 +6,6 @@ RUN apk add --no-cache nginx \
     aria2 \
     aria2-daemon \
     aria2-bash-completion \
-    aria2-dbg \
     aria2-doc \
     && mkdir -p /var/lib/aria2/  \
     && touch /var/lib/aria2/aria2.session
