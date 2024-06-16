@@ -7,11 +7,11 @@ Docker Image packaging for Aria2. (amd64, arm32v6, arm32v7, arm64v8, i386, ppc64
 # Run
 
 ```bash
-docker run --restart=always -d -p 6800:6800 -p 6881-6999:6881-6999 snowdreamtech/aria2:latest
+docker run --restart=always -d -p 80:80 -p 443:443 -p 6800:6800 -p 6881-6999:6881-6999 -v ./Download:/var/lib/aria2 --name aria2-ariang snowdreamtech/aria2:ariang-latest
 ```
 
 ```bash
-docker run --restart=always -d -e TZ=Asia/Shanghai -p 6800:6800 -p 6881-6999:6881-6999 snowdreamtech/aria2:latest
+docker run --restart=always -d -e TZ=Asia/Shanghai -p 80:80 -p 443:443 -p 6800:6800 -p 6881-6999:6881-6999 -v ./Download:/var/lib/aria2 --name aria2-ariang snowdreamtech/aria2:ariang-latest
 ```
 
 # Development
