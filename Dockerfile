@@ -7,8 +7,9 @@ RUN apk add --no-cache nginx \
     aria2-daemon \
     aria2-bash-completion \
     aria2-doc \
-    && mkdir -p /var/lib/aria2/  \
-    && touch /var/lib/aria2/aria2.session
+    && mkdir -p /var/lib/aria2/.aria2  \
+    && touch /var/lib/aria2/.aria2/aria2.session  \
+    && chown -R aria2:aria2 /var/lib/aria2/.aria2
 
 COPY http.d /etc/nginx/http.d
 
