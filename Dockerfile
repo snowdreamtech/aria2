@@ -2,10 +2,7 @@ FROM snowdreamtech/alpine:3.20.0
 
 LABEL maintainer="snowdream <sn0wdr1am@qq.com>"
 
-RUN apk add --no-cache aria2 \
-    aria2-daemon \
-    aria2-bash-completion \
-    aria2-doc \
+RUN apk add --no-cache aria2-daemon=1.37.0-r0 \
     && mkdir -p /var/lib/aria2/.aria2  \
     && touch /var/lib/aria2/.aria2/aria2.session  \
     && chown -R aria2:aria2 /var/lib/aria2/.aria2
