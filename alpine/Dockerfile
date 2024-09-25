@@ -1,3 +1,21 @@
+FROM snowdreamtech/build-essential:alpine3.20 AS builder
+
+ENV ARIA2_VERSION=1.37.0
+
+RUN mkdir /workspace
+
+WORKDIR /workspace
+
+RUN wget -c https://github.com/aria2/aria2/archive/refs/tags/release-${ARIA2_VERSION}.tar.gz \
+    && tar zxvf aria2-release-${ARIA2_VERSION} \
+    && cd aria2-release-${ARIA2_VERSION} \
+    && autoreconf -i \
+    && ./configure ARIA2_STATIC=yes --without-gnutls --with-openssl \
+    && make \
+    && cp -rfv bin conf /workspace/ 
+
+
+
 FROM snowdreamtech/alpine:3.20.3
 
 # OCI annotations to image
