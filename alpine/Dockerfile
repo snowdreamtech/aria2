@@ -12,17 +12,24 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.version="3.20.3" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
 
-ENV ARIA2_VERSION=1.37.0-r0
+ENV ARIA2_VERSION=1.37.0-r0 \
+    ARIANG_VERSION=1.3.7
 
 RUN apk add --no-cache aria2-daemon=${ARIA2_VERSION} \
+    nginx \
     && mkdir -p /var/lib/aria2/.aria2  \
     && touch /var/lib/aria2/.aria2/aria2.session  \
-    && chown -R aria2:aria2 /var/lib/aria2/.aria2
+    && chown -R aria2:aria2 /var/lib/aria2/.aria2 \
+    && wget -c https://github.com/mayswind/AriaNg/releases/download/${ARIANG_VERSION}/AriaNg-${ARIANG_VERSION}.zip \
+    && unzip -o -d /var/lib/nginx/html AriaNg-${ARIANG_VERSION}.zip  \
+    && rm -rfv AriaNg-${ARIANG_VERSION}.zip
+
+COPY http.d /etc/nginx/http.d
 
 COPY aria2.conf /etc/aria2.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 
 ENTRYPOINT ["docker-entrypoint.sh"]

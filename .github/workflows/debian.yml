@@ -3,7 +3,7 @@ name: GitHub Actions Continuous Delivery (Debian)
 on:
   push:
     branches:
-      - main
+      - ariang
     tags:
       - "*"
   schedule:
