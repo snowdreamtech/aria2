@@ -60,7 +60,7 @@ jobs:
             name=ghcr.io/snowdreamtech/aria2,enable=true
           flavor: |
             latest=false  
-            prefix=
+            prefix=ariang
             suffix=
           tags: |
             type=edge,enable=true,priority=700,prefix=,suffix=,branch=dev
