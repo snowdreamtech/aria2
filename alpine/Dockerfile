@@ -7,7 +7,7 @@ RUN mkdir /workspace
 WORKDIR /workspace
 
 RUN wget -c https://github.com/aria2/aria2/archive/refs/tags/release-${ARIA2_VERSION}.tar.gz \
-    && tar zxvf aria2-release-${ARIA2_VERSION} \
+    && tar zxvf release-${ARIA2_VERSION}.tar.gz \
     && cd aria2-release-${ARIA2_VERSION} \
     && autoreconf -i \
     && ./configure ARIA2_STATIC=yes --without-gnutls --with-openssl \
