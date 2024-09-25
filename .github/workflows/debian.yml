@@ -60,21 +60,23 @@ jobs:
             name=ghcr.io/snowdreamtech/aria2,enable=true
           flavor: |
             latest=false  
-            prefix=ariang
+            prefix=
             suffix=
           tags: |
-            type=edge,enable=true,priority=700,prefix=,suffix=-debian,branch=dev
-            type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=debian
-            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=debian
-            type=pep440,enable=true,priority=900,prefix=,suffix=-debian,pattern={{version}}
-            type=pep440,enable=true,priority=900,prefix=,suffix=-debian,pattern={{major}}.{{minor}}
-            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=-debian,pattern={{major}}
-            type=edge,enable=true,priority=700,prefix=,suffix=-bookworm,branch=dev
-            type=raw,enable={{is_default_branch}},priority=200,prefix=,suffix=,value=bookworm
-            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=bookworm
-            type=pep440,enable=true,priority=900,prefix=,suffix=-bookworm,pattern={{version}}
-            type=pep440,enable=true,priority=900,prefix=,suffix=-bookworm,pattern={{major}}.{{minor}}
-            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=,suffix=-bookworm,pattern={{major}}
+            type=ref,enable=true,priority=600,prefix=,suffix=-debian,event=branch
+            type=edge,enable=true,priority=700,prefix=ariang-,suffix=-debian,branch=dev
+            type=raw,enable={{is_default_branch}},priority=200,prefix=ariang-,suffix=,value=debian
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=ariang-,suffix=,value=debian
+            type=pep440,enable=true,priority=900,prefix=ariang-,suffix=-debian,pattern={{version}}
+            type=pep440,enable=true,priority=900,prefix=ariang-,suffix=-debian,pattern={{major}}.{{minor}}
+            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=ariang-,suffix=-debian,pattern={{major}}
+            type=ref,enable=true,priority=600,prefix=,suffix=-bookworm,event=branch
+            type=edge,enable=true,priority=700,prefix=ariang-,suffix=-bookworm,branch=dev
+            type=raw,enable={{is_default_branch}},priority=200,prefix=ariang-,suffix=,value=bookworm
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=ariang-,suffix=,value=bookworm
+            type=pep440,enable=true,priority=900,prefix=ariang-,suffix=-bookworm,pattern={{version}}
+            type=pep440,enable=true,priority=900,prefix=ariang-,suffix=-bookworm,pattern={{major}}.{{minor}}
+            type=pep440,enable=${{ !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/0.') }},priority=900,prefix=ariang-,suffix=-bookworm,pattern={{major}}
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
       - name: Build and push
