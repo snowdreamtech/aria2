@@ -32,7 +32,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
 
 
-RUN mkdir -p /var/lib/aria2/.aria2  \
+RUN adduser -D -h /var/lib/aria2  -g aria2 -s /usr/sbin/nologin aria2 \
+    && mkdir -p /var/lib/aria2/.aria2  \
     && touch /var/lib/aria2/.aria2/aria2.session  \
     && chown -R aria2:aria2 /var/lib/aria2/.aria2
 
