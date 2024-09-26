@@ -12,7 +12,7 @@ RUN LIBS_PATH=$(find /usr/lib -name "libcares_static.a" -exec dirname {} \;) \
     && tar zxvf release-${ARIA2_VERSION}.tar.gz \
     && cd aria2-release-${ARIA2_VERSION} \
     && autoreconf -i \
-    && ./configure OPENSSL_LIBS='-lssl -ldl -lcrypto -ldl -lpthread' --with-openssl --without-gnutls --with-libexpat --without-libxml2 ARIA2_STATIC=yes \
+    && ./configure --with-ca-bundle='/etc/ssl/certs/ca-certificates.crt' OPENSSL_LIBS='-lssl -ldl -lcrypto -ldl -lpthread' --with-openssl --without-gnutls --with-libexpat --without-libxml2 ARIA2_STATIC=yes \
     && make
 
 
