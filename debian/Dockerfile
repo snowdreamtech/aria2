@@ -6,7 +6,9 @@ RUN mkdir /workspace
 
 WORKDIR /workspace
 
-RUN wget -c https://github.com/aria2/aria2/archive/refs/tags/release-${ARIA2_VERSION}.tar.gz \
+RUN LIBS_PATH=$(find /usr/lib -name "libcares_static.a" -exec dirname {} \;) \
+    && ln -s ${LIBS_PATH}/libcares_static.a ${LIBS_PATH}/libcares.a \
+    && wget -c https://github.com/aria2/aria2/archive/refs/tags/release-${ARIA2_VERSION}.tar.gz \
     && tar zxvf release-${ARIA2_VERSION}.tar.gz \
     && cd aria2-release-${ARIA2_VERSION} \
     && autoreconf -i \
