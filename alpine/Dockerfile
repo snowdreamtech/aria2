@@ -10,7 +10,7 @@ RUN wget -c https://github.com/aria2/aria2/archive/refs/tags/release-${ARIA2_VER
     && tar zxvf release-${ARIA2_VERSION}.tar.gz \
     && cd aria2-release-${ARIA2_VERSION} \
     && autoreconf -i \
-    && ./configure --with-ca-bundle='/etc/ssl/certs/ca-certificates.crt' OPENSSL_LIBS='-lssl -ldl -lcrypto -ldl -lpthread' --with-openssl --without-gnutls --with-libexpat --without-libxml2 ARIA2_STATIC=yes \
+    && ./configure --with-ca-bundle='/etc/ssl/certs/ca-certificates.crt' OPENSSL_LIBS='-lssl -ldl -lcrypto -ldl -lpthread' --with-openssl --without-gnutls --with-libexpat --without-libxml2 \
     && make \
     && cp -rfv ./src/aria2c /workspace/ 
 
