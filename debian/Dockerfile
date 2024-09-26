@@ -11,46 +11,46 @@ RUN wget -c https://github.com/aria2/aria2/archive/refs/tags/release-${ARIA2_VER
     && cd aria2-release-${ARIA2_VERSION} \
     && autoreconf -i \
     && ./configure --with-ca-bundle='/etc/ssl/certs/ca-certificates.crt' OPENSSL_LIBS='-lssl -ldl -lcrypto -ldl -lpthread' --with-openssl --without-gnutls --with-libexpat --without-libxml2 ARIA2_STATIC=yes \
-    && make
+    && make \
+    && cp -rfv ./src/aria2c /workspace/ 
 
 
 
 
-# FROM snowdreamtech/debian:12.7.0
+FROM snowdreamtech/debian:12.7.0
 
-# # OCI annotations to image
-# LABEL org.opencontainers.image.authors="Snowdream Tech" \
-#     org.opencontainers.image.title="Base Image Based On Debian" \
-#     org.opencontainers.image.description="Docker Images for Base on Debian. (i386,amd64,arm32v5,arm32v7,arm64,mips64le,ppc64le,s390x)" \
-#     org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/aria2" \
-#     org.opencontainers.image.base.name="snowdreamtech/aria2:debian" \
-#     org.opencontainers.image.licenses="MIT" \
-#     org.opencontainers.image.source="https://github.com/snowdreamtech/aria2" \
-#     org.opencontainers.image.vendor="Snowdream Tech" \
-#     org.opencontainers.image.version="12.7" \
-#     org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
+# OCI annotations to image
+LABEL org.opencontainers.image.authors="Snowdream Tech" \
+    org.opencontainers.image.title="Base Image Based On Debian" \
+    org.opencontainers.image.description="Docker Images for Base on Debian. (i386,amd64,arm32v5,arm32v7,arm64,mips64le,ppc64le,s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/aria2" \
+    org.opencontainers.image.base.name="snowdreamtech/aria2:debian" \
+    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/aria2" \
+    org.opencontainers.image.vendor="Snowdream Tech" \
+    org.opencontainers.image.version="12.7" \
+    org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
 
-# ENV DEBIAN_FRONTEND=noninteractive \
-#     ARIA2_VERSION=1.37.0+debian-2
+ENV DEBIAN_FRONTEND=noninteractive 
 
-# RUN set -eux \
-#     && apt-get -qqy update  \
-#     && apt-get -qqy install --no-install-recommends \ 
-#     -t trixie aria2=${ARIA2_VERSION} \     
-#     && useradd -m -d /var/lib/aria2 -c aria2 -s /usr/sbin/nologin aria2 \        
-#     && mkdir -p /var/lib/aria2/.aria2  \
-#     && touch /var/lib/aria2/.aria2/aria2.session  \
-#     && chown -R aria2:aria2 /var/lib/aria2/.aria2 \                                                                                                                                                                        
-#     && apt-get -qqy --purge autoremove \
-#     && apt-get -qqy clean \
-#     && rm -rf /var/lib/apt/lists/* \
-#     && rm -rf /tmp/* \
-#     && rm -rf /var/tmp/*
+RUN set -eux \
+    && apt-get -qqy update  \    
+    && useradd -m -d /var/lib/aria2 -c aria2 -s /usr/sbin/nologin aria2 \        
+    && mkdir -p /var/lib/aria2/.aria2  \
+    && touch /var/lib/aria2/.aria2/aria2.session  \
+    && chown -R aria2:aria2 /var/lib/aria2/.aria2 \                                                                                                                                                                        
+    && apt-get -qqy --purge autoremove \
+    && apt-get -qqy clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
+    && rm -rf /var/tmp/*
 
-# COPY aria2.conf /etc/aria2.conf
+COPY --from=builder /workspace/aria2c /usr/bin/
 
-# COPY docker-entrypoint.sh /usr/local/bin/
+COPY aria2.conf /etc/aria2.conf
 
-# EXPOSE 6800 6881-6999
+COPY docker-entrypoint.sh /usr/local/bin/
 
-# ENTRYPOINT ["docker-entrypoint.sh"]
+EXPOSE 6800 6881-6999
+
+ENTRYPOINT ["docker-entrypoint.sh"]
