@@ -10,7 +10,7 @@ RUN wget -c https://github.com/aria2/aria2/archive/refs/tags/release-${ARIA2_VER
     && tar zxvf release-${ARIA2_VERSION}.tar.gz \
     && cd aria2-release-${ARIA2_VERSION} \
     && autoreconf -i \
-    && ./configure --with-openssl --without-gnutls --with-libexpat --without-libxml2 ARIA2_STATIC=yes \
+    && ./configure OPENSSL_LIBS='-lssl -ldl -lcrypto -ldl -lpthread' --with-openssl --without-gnutls --with-libexpat --without-libxml2 ARIA2_STATIC=yes \
     && make
 
 
