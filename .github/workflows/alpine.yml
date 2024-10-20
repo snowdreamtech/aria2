@@ -85,7 +85,7 @@ jobs:
             name=ghcr.io/snowdreamtech/aria2,enable=true
           flavor: |
             latest=false  
-            prefix=
+            prefix=ariang
             suffix=
           tags: |
             type=ref,enable=${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.event_name != 'schedule' }},priority=600,prefix=,suffix=,event=branch
