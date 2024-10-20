@@ -4,9 +4,22 @@ name: GitHub Actions Version Updater
 on:
   push:
     branches:
-      - main
+      - "main"
+      - "dev"
+      - "feat/**"
+      - "feature/**"
+      - "fix/**"
+      - "pr/**"
     tags:
       - "*"
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+      - "feat/**"
+      - "feature/**"
+      - "fix/**"
+      - "pr/**"
   schedule:
     # Automatically run on every Day
     - cron: "0 17 * * *"
@@ -18,7 +31,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4.2.1
         with:
           # [Required] Access token with `workflow` scope.
           token: ${{ secrets.WORKFLOW_SECRET }}
