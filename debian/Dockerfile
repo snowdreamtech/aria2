@@ -21,8 +21,9 @@ RUN set -eux \
     -t trixie aria2=${ARIA2_VERSION} \     
     && useradd -m -d /var/lib/aria2 -c aria2 -s /usr/sbin/nologin aria2 \        
     && mkdir -p /var/lib/aria2/.aria2  \
+    && mkdir -p /var/lib/aria2/downloads  \
     && touch /var/lib/aria2/.aria2/aria2.session  \
-    && chown -R aria2:aria2 /var/lib/aria2/.aria2 \                                                                                                                                                                        
+    && chown -R aria2:aria2 /var/lib/aria2 \                                                                                                                                                                        
     && apt-get -qqy --purge autoremove \
     && apt-get -qqy clean \
     && rm -rf /var/lib/apt/lists/* \

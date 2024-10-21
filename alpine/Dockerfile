@@ -16,8 +16,9 @@ ENV ARIA2_VERSION=1.37.0-r0
 
 RUN apk add --no-cache aria2-daemon=${ARIA2_VERSION} \
     && mkdir -p /var/lib/aria2/.aria2  \
+    && mkdir -p /var/lib/aria2/downloads  \
     && touch /var/lib/aria2/.aria2/aria2.session  \
-    && chown -R aria2:aria2 /var/lib/aria2/.aria2
+    && chown -R aria2:aria2 /var/lib/aria2
 
 COPY aria2.conf /etc/aria2.conf
 
