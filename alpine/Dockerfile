@@ -18,8 +18,9 @@ ENV ARIA2_VERSION=1.37.0-r0 \
 RUN apk add --no-cache aria2-daemon=${ARIA2_VERSION} \
     nginx \
     && mkdir -p /var/lib/aria2/.aria2  \
+    && mkdir -p /var/lib/aria2/downloads  \
     && touch /var/lib/aria2/.aria2/aria2.session  \
-    && chown -R aria2:aria2 /var/lib/aria2/.aria2 \
+    && chown -R aria2:aria2 /var/lib/aria2 \
     && wget -c https://github.com/mayswind/AriaNg/releases/download/${ARIANG_VERSION}/AriaNg-${ARIANG_VERSION}.zip \
     && unzip -o -d /var/lib/nginx/html AriaNg-${ARIANG_VERSION}.zip  \
     && rm -rfv AriaNg-${ARIANG_VERSION}.zip
