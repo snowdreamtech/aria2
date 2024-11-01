@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    ARIA2_VERSION=1.37.0+debian-2
+    ARIA2_VERSION=1.37.0+debian-2+b1
 
 RUN set -eux \
     && apt-get -qqy update  \
