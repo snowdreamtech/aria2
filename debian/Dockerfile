@@ -13,27 +13,34 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    ARIA2_VERSION=1.37.0+debian-2+b1
+    ARIA2_VERSION=1.37.0+debian-2 \
+    ARIANG_VERSION=1.3.7
 
 RUN set -eux \
     && apt-get -qqy update  \
     && apt-get -qqy install --no-install-recommends \ 
-    -t trixie aria2=${ARIA2_VERSION} \     
+    -t trixie aria2=${ARIA2_VERSION} \   
+    nginx \  
     && useradd -m -d /var/lib/aria2 -c aria2 -s /usr/sbin/nologin aria2 \        
     && mkdir -p /var/lib/aria2/.aria2  \
     && mkdir -p /var/lib/aria2/downloads  \
     && touch /var/lib/aria2/.aria2/aria2.session  \
-    && chown -R aria2:aria2 /var/lib/aria2 \                                                                                                                                                                        
+    && chown -R aria2:aria2 /var/lib/aria2/.aria2 \
+    && wget -c https://github.com/mayswind/AriaNg/releases/download/${ARIANG_VERSION}/AriaNg-${ARIANG_VERSION}.zip \
+    && unzip -o -d /var/lib/nginx/html AriaNg-${ARIANG_VERSION}.zip  \
+    && rm -rfv AriaNg-${ARIANG_VERSION}.zip \
     && apt-get -qqy --purge autoremove \
     && apt-get -qqy clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
+COPY http.d /etc/nginx/http.d
+
 COPY aria2.conf /etc/aria2.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 
 ENTRYPOINT ["docker-entrypoint.sh"]
