@@ -25,7 +25,7 @@ RUN set -eux \
     && mkdir -p /var/lib/aria2/.aria2  \
     && mkdir -p /var/lib/aria2/downloads  \
     && touch /var/lib/aria2/.aria2/aria2.session  \
-    && chown -R aria2:aria2 /var/lib/aria2/.aria2 \
+    && chown -R aria2:aria2 /var/lib/aria2 \                                                                                                                                                                        
     && wget -c https://github.com/mayswind/AriaNg/releases/download/${ARIANG_VERSION}/AriaNg-${ARIANG_VERSION}.zip \
     && unzip -o -d /var/lib/nginx/html AriaNg-${ARIANG_VERSION}.zip  \
     && rm -rfv AriaNg-${ARIANG_VERSION}.zip \
