@@ -30,7 +30,7 @@ docker run -d \
   -e TZ=Asia/Shanghai \
   -p 6800:6800 \
   -p 6881-6999:6881-6999 \
-  -v /path/to/data:/path/to/data \
+  -v /path/to/data:/var/lib/aria2/downloads \
   --restart unless-stopped \
   snowdreamtech/aria2:latest
 ```
@@ -65,7 +65,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /path/to/data:/path/to/data
+      - /path/to/data:/var/lib/aria2/downloads
     restart: unless-stopped
 ```
 
