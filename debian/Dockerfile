@@ -12,19 +12,20 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.version="12.8" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
 
-# keep the docker container running
-ENV KEEPALIVE=1
+ENV DEBIAN_FRONTEND=noninteractive \
+    KEEPALIVE=1 \
+    ARIA2_VERSION=1.36.0-1
 
 ARG GID=1000 \
     UID=1000  \
     USER=aria2 \
-    WORKDIR=/home/aria2
+    WORKDIR=/var/lib/aria2
 
 # Create a user with UID and GID
 RUN set -eux \
     &&if [ "${USER}" != "root" ]; then \
     addgroup --gid ${GID} ${USER}; \
-    adduser --home /home/${USER} --uid ${UID} --gid ${GID} --gecos ${USER} --shell /bin/bash --disabled-password ${USER}; \
+    adduser --home ${WORKDIR} --uid ${UID} --gid ${GID} --gecos ${USER} --shell /usr/sbin/nologin --disabled-password ${USER}; \
     # sed -i "/%sudo/c ${USER} ALL=(ALL:ALL) NOPASSWD:ALL" /etc/sudoers; \
     fi \
     && apt-get -qqy --purge autoremove \
@@ -36,7 +37,11 @@ RUN set -eux \
 RUN set -eux \
     && apt-get -qqy update  \
     && apt-get -qqy install --no-install-recommends \ 
-    vim \
+    aria2=${ARIA2_VERSION} \     
+    && mkdir -p /var/lib/aria2/.aria2  \
+    && mkdir -p /var/lib/aria2/downloads  \
+    && touch /var/lib/aria2/.aria2/aria2.session  \
+    && chown -R ${USER}:${USER} /var/lib/aria2 \                                                                                                                                                                        
     && apt-get -qqy --purge autoremove \
     && apt-get -qqy clean \
     && rm -rf /var/lib/apt/lists/* \
@@ -49,6 +54,10 @@ USER ${USER}
 # Set the workdir
 WORKDIR ${WORKDIR}
 
+COPY aria2.conf /etc/aria2.conf
+
 COPY docker-entrypoint.sh /usr/local/bin/
+
+EXPOSE 6800 6881-6999
 
 ENTRYPOINT ["docker-entrypoint.sh"]
