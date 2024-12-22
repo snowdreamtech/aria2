@@ -16,6 +16,8 @@ To help you get started creating a container from this image you can either use 
 docker run -d \
   --name=aria2 \
   -e TZ=Asia/Shanghai \
+  -p 6800:6800 \
+  -p 6881-6999:6881-6999 \
   --restart unless-stopped \
   snowdreamtech/aria2:latest
 ```
@@ -26,6 +28,8 @@ docker run -d \
 docker run -d \
   --name=aria2 \
   -e TZ=Asia/Shanghai \
+  -p 6800:6800 \
+  -p 6881-6999:6881-6999 \
   -v /path/to/data:/path/to/data \
   --restart unless-stopped \
   snowdreamtech/aria2:latest
@@ -40,6 +44,9 @@ services:
   aria2:
     image: snowdreamtech/aria2:latest
     container_name: aria2
+    ports:
+      - '6800:6800'
+      - '6881-6999:6881-6999'
     environment:
       - TZ=Asia/Shanghai
     restart: unless-stopped
@@ -52,6 +59,9 @@ services:
   aria2:
     image: snowdreamtech/aria2:latest
     container_name: aria2
+    ports:
+      - '6800:6800'
+      - '6881-6999:6881-6999'
     environment:
       - TZ=Asia/Shanghai
     volumes:
