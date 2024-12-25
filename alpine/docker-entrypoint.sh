@@ -2,7 +2,7 @@
 set -e
 
 # aria2c
-/usr/bin/aria2c --conf-path /etc/aria2.conf
+/usr/bin/aria2c --conf-path /etc/aria2.conf --daemon --enable-rpc=true
 
 # exec commands
 if [ -n "$*" ]; then
