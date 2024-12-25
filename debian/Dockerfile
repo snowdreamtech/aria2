@@ -9,7 +9,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.source="https://github.com/snowdreamtech/aria2" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="12.8" \
+    org.opencontainers.image.version="1.36.0" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
 
 ENV DEBIAN_FRONTEND=noninteractive \
