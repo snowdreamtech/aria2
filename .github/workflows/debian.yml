@@ -5,6 +5,7 @@ on:
     branches:
       - "main"
       - "ariang"
+      - "webui"
       - "dev"
       - "feat/**"
       - "feature/**"
