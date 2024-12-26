@@ -14,7 +14,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
 
 # keep the docker container running
 ENV KEEPALIVE=1 \
-ARIA2_VERSION=1.37.0-r0
+    ARIA2_VERSION=1.37.0-r0
 
 ARG GID=1000 \
     UID=1000  \
