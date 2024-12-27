@@ -14,6 +14,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
 
 ENV DEBIAN_FRONTEND=noninteractive \
     KEEPALIVE=1 \
+    RPC_SECRET= \
     ARIA2_VERSION=1.36.0-1
 
 ARG GID=1000 \
