@@ -10,7 +10,9 @@ To help you get started creating a container from this image you can either use 
 
 ## Docker Cli
 
-### Simple
+If `RPC_SECRET` is not set, It will be generated automatically. You can check it in the docker container logs.
+
+### Aria2 Cli
 
 ```bash
 docker run -d \
@@ -18,55 +20,45 @@ docker run -d \
   -e TZ=Asia/Shanghai \
   -p 6800:6800 \
   -p 6881-6999:6881-6999 \
+  -v ./downloads:/var/lib/aria2/downloads \
   --restart unless-stopped \
   snowdreamtech/aria2:latest
+# snowdreamtech/aria2:alpine
+# snowdreamtech/aria2:debian
 ```
 
-### Advance
+### Aria2 With [AriaNG](https://github.com/mayswind/AriaNg)
 
 ```bash
 docker run -d \
   --name=aria2 \
   -e TZ=Asia/Shanghai \
+  -p 80:80 \
+  -p 443:443 \
   -p 6800:6800 \
   -p 6881-6999:6881-6999 \
-  -v /path/to/data:/var/lib/aria2/downloads \
+  -v ./downloads:/var/lib/aria2/downloads \
   --restart unless-stopped \
-  snowdreamtech/aria2:latest
+  snowdreamtech/aria2:ariang
+# snowdreamtech/aria2:ariang-alpine
+# snowdreamtech/aria2:ariang-debian
 ```
 
-## Docker Compose
-
-### Simple
+### Aria2 With [WebUI](https://github.com/ziahamza/webui-aria2)
 
 ```bash
-services:
-  aria2:
-    image: snowdreamtech/aria2:latest
-    container_name: aria2
-    ports:
-      - '6800:6800'
-      - '6881-6999:6881-6999'
-    environment:
-      - TZ=Asia/Shanghai
-    restart: unless-stopped
-```
-
-### Advance
-
-```bash
-services:
-  aria2:
-    image: snowdreamtech/aria2:latest
-    container_name: aria2
-    ports:
-      - '6800:6800'
-      - '6881-6999:6881-6999'
-    environment:
-      - TZ=Asia/Shanghai
-    volumes:
-      - /path/to/data:/var/lib/aria2/downloads
-    restart: unless-stopped
+docker run -d \
+  --name=aria2 \
+  -e TZ=Asia/Shanghai \
+  -p 80:80 \
+  -p 443:443 \
+  -p 6800:6800 \
+  -p 6881-6999:6881-6999 \
+  -v ./downloads:/var/lib/aria2/downloads \
+  --restart unless-stopped \
+  snowdreamtech/aria2:webui
+# snowdreamtech/aria2:webui-alpine
+# snowdreamtech/aria2:webui-debian
 ```
 
 # Development
