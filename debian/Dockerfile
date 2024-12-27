@@ -49,6 +49,29 @@ RUN set -eux \
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
+RUN set -eux \
+    && apt-get -qqy update  \
+    && apt-get -qqy install --no-install-recommends \ 
+    nginx \
+    && rm -rfv /etc/nginx/sites-available/* \
+    && rm -rfv /etc/nginx/sites-enabled/* \   
+    && chown -R ${USER}:${USER} /var/log/nginx \
+    && chown -R ${USER}:${USER} /var/lib/nginx \
+    && mkdir -p /usr/share/nginx/html \
+    && chown -R ${USER}:${USER} /usr/share/nginx \
+    && chown -R ${USER}:${USER} /etc/nginx \
+    && touch /var/run/nginx.pid \
+    && chown -R ${USER}:${USER} /var/run/nginx.pid \
+    # && chown -R ${USER}:${USER} /var/tmp/nginx \
+    && sed -i "s/^user.*/user ${USER};/g" /etc/nginx/nginx.conf \                          
+    && apt-get -qqy --purge autoremove \
+    && apt-get -qqy clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
+    && rm -rf /var/tmp/*
+
+COPY conf.d /etc/nginx/conf.d
+
 # Switch to the user
 USER ${USER}
 
@@ -59,6 +82,6 @@ COPY aria2.conf /etc/aria2.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 
 ENTRYPOINT ["docker-entrypoint.sh"]
