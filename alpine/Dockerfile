@@ -48,6 +48,13 @@ RUN apk add --no-cache nginx \
 
 COPY http.d /etc/nginx/http.d
 
+RUN wget -c https://github.com/ziahamza/webui-aria2/archive/refs/heads/master.zip \
+    && unzip master.zip  \
+    && cp -rfv ./webui-aria2-master/docs/* /usr/share/nginx/html/ \
+    && chown -R ${USER}:${USER} /usr/share/nginx \
+    && rm -rfv master.zip \
+    && rm -rfv webui-aria2-master
+
 # Switch to the user
 USER ${USER}
 
