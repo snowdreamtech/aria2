@@ -34,7 +34,7 @@ on:
       - "pr/**"
   schedule:
     # Automatically run on every Day
-    - cron: "0 17 * * *"
+    - cron: "04 18 * * *"
   workflow_dispatch:
 
 jobs:
