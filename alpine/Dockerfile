@@ -35,6 +35,19 @@ RUN apk add --no-cache aria2-daemon=${ARIA2_VERSION} \
     && touch /var/lib/aria2/.aria2/aria2.session  \
     && chown -R ${USER}:${USER} /var/lib/aria2
 
+RUN apk add --no-cache nginx \
+    && chown -R ${USER}:${USER} /var/log/nginx \
+    && chown -R ${USER}:${USER} /var/lib/nginx \
+    && mkdir -p /usr/share/nginx/html \
+    && cp -rfv /var/lib/nginx/html/* /usr/share/nginx/html/ \
+    && chown -R ${USER}:${USER} /usr/share/nginx \
+    && chown -R ${USER}:${USER} /etc/nginx \
+    && chown -R ${USER}:${USER} /var/run/nginx \
+    # && chown -R ${USER}:${USER} /var/tmp/nginx \
+    && sed -i "s/^user.*/user ${USER};/g" /etc/nginx/nginx.conf
+
+COPY http.d /etc/nginx/http.d
+
 # Switch to the user
 USER ${USER}
 
@@ -45,6 +58,6 @@ COPY aria2.conf /etc/aria2.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 
 ENTRYPOINT ["docker-entrypoint.sh"]
