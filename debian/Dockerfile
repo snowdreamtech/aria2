@@ -72,6 +72,20 @@ RUN set -eux \
 
 COPY conf.d /etc/nginx/conf.d
 
+RUN set -eux \
+    && apt-get -qqy update  \                       
+    && wget -c https://github.com/ziahamza/webui-aria2/archive/refs/heads/master.zip \
+    && unzip master.zip  \
+    && cp -rfv ./webui-aria2-master/docs/* /usr/share/nginx/html/ \
+    && chown -R ${USER}:${USER} /usr/share/nginx \
+    && rm -rfv master.zip \
+    && rm -rfv webui-aria2-master \
+    && apt-get -qqy --purge autoremove \
+    && apt-get -qqy clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
+    && rm -rf /var/tmp/*
+
 # Switch to the user
 USER ${USER}
 
