@@ -16,7 +16,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
 ENV KEEPALIVE=1 \
     RPC_SECRET= \
     ARIA2_VERSION=1.37.0-r0 \
-    ARIANG_VERSION=1.3.8
+    ARIANG_VERSION=1.3.10
 
 ARG GID=1000 \
     UID=1000  \
