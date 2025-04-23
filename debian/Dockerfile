@@ -15,7 +15,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
 ENV DEBIAN_FRONTEND=noninteractive \
     KEEPALIVE=1 \
     RPC_SECRET= \
-    ARIA2_VERSION=1.36.0-1
+    ARIA2_VERSION=1.36.0-1 \
+    ARIANG_VERSION=1.3.8
 
 ARG GID=1000 \
     UID=1000  \
@@ -71,6 +72,18 @@ RUN set -eux \
     && rm -rf /var/tmp/*
 
 COPY conf.d /etc/nginx/conf.d
+
+RUN set -eux \
+    && apt-get -qqy update  \                       
+    && wget -c https://github.com/mayswind/AriaNg/releases/download/${ARIANG_VERSION}/AriaNg-${ARIANG_VERSION}.zip \
+    && unzip -o -d /usr/share/nginx/html AriaNg-${ARIANG_VERSION}.zip  \
+    && chown -R ${USER}:${USER} /usr/share/nginx \
+    && rm -rfv AriaNg-${ARIANG_VERSION}.zip \
+    && apt-get -qqy --purge autoremove \
+    && apt-get -qqy clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
+    && rm -rf /var/tmp/*
 
 # Switch to the user
 USER ${USER}

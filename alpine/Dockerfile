@@ -15,7 +15,8 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
 # keep the docker container running
 ENV KEEPALIVE=1 \
     RPC_SECRET= \
-    ARIA2_VERSION=1.37.0-r0
+    ARIA2_VERSION=1.37.0-r0 \
+    ARIANG_VERSION=1.3.8
 
 ARG GID=1000 \
     UID=1000  \
@@ -47,6 +48,11 @@ RUN apk add --no-cache nginx \
     && sed -i "s/^user.*/user ${USER};/g" /etc/nginx/nginx.conf
 
 COPY http.d /etc/nginx/http.d
+
+RUN wget -c https://github.com/mayswind/AriaNg/releases/download/${ARIANG_VERSION}/AriaNg-${ARIANG_VERSION}.zip \
+    && unzip -o -d /usr/share/nginx/html AriaNg-${ARIANG_VERSION}.zip  \
+    && chown -R ${USER}:${USER} /usr/share/nginx \
+    && rm -rfv AriaNg-${ARIANG_VERSION}.zip
 
 # Switch to the user
 USER ${USER}
