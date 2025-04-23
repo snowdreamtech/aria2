@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# nginx 
+/usr/sbin/nginx -c /etc/nginx/nginx.conf
+
 # openssl rand -base64 33
 if [ -z "${RPC_SECRET}" ]; then {
     RPC_SECRET=$(openssl rand -base64 33)
