@@ -2,17 +2,17 @@
 
 [![dockeri.co](https://dockerico.blankenship.io/image/snowdreamtech/aria2)](https://hub.docker.com/r/snowdreamtech/aria2)
 
-Docker Image packaging for Aria2. (amd64, arm32v5,  arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le,riscv64, s390x)
+Aria2 的 Docker 镜像打包。(amd64, arm32v5, arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le, riscv64, s390x)
 
 [README](README.md) | [中文文档](README.zh-CN.md)
 
-# Usage
+# 用法
 
-To help you get started creating a container from this image, you can either use docker-compose or the docker cli.
+为了帮助您开始使用此镜像创建容器，您可以使用 docker-compose 或 docker cli。
 
 ## Docker Cli
 
-If `RPC_SECRET` is not set, It will be generated automatically. You can check it in the docker container logs.
+如果未设置 `RPC_SECRET`，它将自动生成。您可以在 Docker 容器日志中查看它。
 
 ### Aria2 Cli
 
@@ -29,7 +29,7 @@ docker run -d \
 # snowdreamtech/aria2:debian
 ```
 
-### Aria2 With [AriaNG](https://github.com/mayswind/AriaNg)
+### Aria2 配合 [AriaNG](https://github.com/mayswind/AriaNg)
 
 ```bash
 docker run -d \
@@ -46,7 +46,7 @@ docker run -d \
 # snowdreamtech/aria2:ariang-debian
 ```
 
-### Aria2 With [WebUI](https://github.com/ziahamza/webui-aria2)
+### Aria2 配合 [WebUI](https://github.com/ziahamza/webui-aria2)
 
 ```bash
 docker run -d \
@@ -63,14 +63,14 @@ docker run -d \
 # snowdreamtech/aria2:webui-debian
 ```
 
-# Development
+# 开发
 
 ```bash
 docker buildx create --use --name build --node build --driver-opt network=host
 docker buildx build -t snowdreamtech/aria2 --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x . --push
 ```
 
-## Reference
+## 参考
 
 1. [使用 buildx 构建多平台 Docker 镜像](https://icloudnative.io/posts/multiarch-docker-with-buildx/)
 1. [如何使用 docker buildx 构建跨平台 Go 镜像](https://waynerv.com/posts/building-multi-architecture-images-with-docker-buildx/#buildx-%E7%9A%84%E8%B7%A8%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BA%E7%AD%96%E7%95%A5)
@@ -79,13 +79,13 @@ docker buildx build -t snowdreamtech/aria2 --platform=linux/386,linux/amd64,linu
 1. [Faster Multi-Platform Builds: Dockerfile Cross-Compilation Guide](https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/)
 1. [docker/buildx](https://github.com/docker/buildx)
 
-## Contact (备注：aria2)
+## 联系方式 (备注：aria2)
 
-* Email: sn0wdr1am@qq.com
+* 邮箱: sn0wdr1am@qq.com
 * QQ: 3217680847
 * QQ群: 949022145
-* WeChat/微信群: sn0wdr1am
+* 微信/微信群: sn0wdr1am
 
-## License
+## 许可证
 
 MIT
