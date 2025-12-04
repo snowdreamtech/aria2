@@ -51,6 +51,8 @@ ENV KEEPALIVE=${KEEPALIVE} \
 ENV RPC_HASH= \
     ARIA2_VERSION=1.37.0-r1
 
+ENV ARIANG_VERSION=1.3.11
+
 # Create a user with PUID and PGID
 RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
     addgroup -g ${PGID} ${USER}; \
@@ -65,12 +67,17 @@ RUN apk update \
     && mkdir -p /var/lib/aria2/downloads  \
     && touch /var/lib/aria2/.aria2/aria2.session  
 
+RUN wget -c https://github.com/mayswind/AriaNg/releases/download/${ARIANG_VERSION}/AriaNg-${ARIANG_VERSION}.zip \
+    && rm -rfv /var/lib/nginx/html/* \
+    && unzip -o -d /var/lib/nginx/html/ AriaNg-${ARIANG_VERSION}.zip  \
+    && rm -rfv AriaNg-${ARIANG_VERSION}.zip
+
 # Enable CAP_NET_BIND_SERVICE
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
     # setcap 'cap_net_bind_service=+ep' `which nginx`; \
     # fi
     
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 
 COPY aria2.conf /etc/aria2.conf
 

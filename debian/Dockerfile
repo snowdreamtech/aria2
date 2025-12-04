@@ -53,6 +53,8 @@ ENV DEBIAN_FRONTEND=${DEBIAN_FRONTEND} \
 ENV RPC_HASH= \
     ARIA2_VERSION=1.37.0+debian-3
 
+ENV ARIANG_VERSION=1.3.11
+
 # Create a user with PUID and PGID
 RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
     addgroup --gid ${PGID} ${USER}; \
@@ -73,12 +75,24 @@ RUN set -eux \
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
+RUN set -eux \
+    && DEBIAN_FRONTEND=noninteractive apt-get -qqy update  \
+    && wget -c https://github.com/mayswind/AriaNg/releases/download/${ARIANG_VERSION}/AriaNg-${ARIANG_VERSION}.zip \
+    && rm -rfv /usr/share/nginx/html/* \
+    && unzip -o -d /usr/share/nginx/html AriaNg-${ARIANG_VERSION}.zip  \
+    && rm -rfv AriaNg-${ARIANG_VERSION}.zip \
+    && DEBIAN_FRONTEND=noninteractive apt-get -qqy --purge autoremove \
+    && DEBIAN_FRONTEND=noninteractive apt-get -qqy clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
+    && rm -rf /var/tmp/*
+
 # Enable CAP_NET_BIND_SERVICE
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
 #     # setcap 'cap_net_bind_service=+ep' `which nginx`; \
 #     fi
 
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 
 COPY aria2.conf /etc/aria2.conf
 
