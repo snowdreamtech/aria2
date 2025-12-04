@@ -65,12 +65,19 @@ RUN apk update \
     && mkdir -p /var/lib/aria2/downloads  \
     && touch /var/lib/aria2/.aria2/aria2.session  
 
+RUN wget -c https://github.com/ziahamza/webui-aria2/archive/refs/heads/master.zip \
+    && unzip master.zip  \
+    && rm -rfv /var/lib/nginx/html/* \
+    && cp -rfv ./webui-aria2-master/docs/* /var/lib/nginx/html/ \
+    && rm -rfv master.zip \
+    && rm -rfv webui-aria2-master
+
 # Enable CAP_NET_BIND_SERVICE
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
     # setcap 'cap_net_bind_service=+ep' `which nginx`; \
     # fi
     
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 
 COPY aria2.conf /etc/aria2.conf
 

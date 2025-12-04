@@ -73,12 +73,26 @@ RUN set -eux \
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
+RUN set -eux \
+    && DEBIAN_FRONTEND=noninteractive apt-get -qqy update  \
+    && wget -c https://github.com/ziahamza/webui-aria2/archive/refs/heads/master.zip \
+    && unzip master.zip  \
+    && rm -rfv /usr/share/nginx/html/* \
+    && cp -rfv ./webui-aria2-master/docs/* /usr/share/nginx/html/ \
+    && rm -rfv master.zip \
+    && rm -rfv webui-aria2-master \
+    && DEBIAN_FRONTEND=noninteractive apt-get -qqy --purge autoremove \
+    && DEBIAN_FRONTEND=noninteractive apt-get -qqy clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
+    && rm -rf /var/tmp/*
+
 # Enable CAP_NET_BIND_SERVICE
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
 #     # setcap 'cap_net_bind_service=+ep' `which nginx`; \
 #     fi
 
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 
 COPY aria2.conf /etc/aria2.conf
 
