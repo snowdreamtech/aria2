@@ -111,9 +111,9 @@ jobs:
         uses: docker/metadata-action@v5.10.0
         with:
           images: |
-            name=snowdreamtech/base,enable=true
-            name=ghcr.io/snowdreamtech/base,enable=true
-            name=quay.io/snowdreamtech/base,enable=true
+            name=snowdreamtech/aria2,enable=true
+            name=ghcr.io/snowdreamtech/aria2,enable=true
+            name=quay.io/snowdreamtech/aria2,enable=true
           flavor: |
             latest=false  
             prefix=
