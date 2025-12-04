@@ -50,7 +50,7 @@ ENV DEBIAN_FRONTEND=${DEBIAN_FRONTEND} \
     USER=${USER} \
     WORKDIR=${WORKDIR} 
 
-ENV RPC_SECRET= \
+ENV RPC_HASH= \
     ARIA2_VERSION=1.37.0+debian-3
 
 # Create a user with PUID and PGID

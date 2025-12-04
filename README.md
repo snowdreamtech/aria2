@@ -17,7 +17,7 @@ To help you get started creating a container from this image, you can either use
 
 ## Docker Cli
 
-If `RPC_SECRET` is not set, It will be generated automatically. You can check it in the docker container logs.
+If `RPC_HASH` is not set, It will be generated automatically. You can check it in the docker container logs.
 
 ### Aria2 Cli
 
@@ -105,7 +105,7 @@ To help you get started creating a container from this image, you can either use
 
 ## Docker Cli
 
-If `RPC_SECRET` is not set, It will be generated automatically. You can check it in the docker container logs.
+If `RPC_HASH` is not set, It will be generated automatically. You can check it in the docker container logs.
 
 ### Aria2 Cli
 

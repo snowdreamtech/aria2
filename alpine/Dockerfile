@@ -48,7 +48,7 @@ ENV KEEPALIVE=${KEEPALIVE} \
     USER=${USER} \
     WORKDIR=${WORKDIR} 
 
-ENV RPC_SECRET= \
+ENV RPC_HASH= \
     ARIA2_VERSION=1.37.0-r1
 
 # Create a user with PUID and PGID
