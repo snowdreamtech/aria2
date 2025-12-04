@@ -19,7 +19,7 @@ USER root
 WORKDIR /root
 
 # keep the docker container running
-ARG KEEPALIVE=0 \
+ARG KEEPALIVE=1 \
     # The cap_net_bind_service capability in Linux allows a process to bind a socket to Internet domain privileged ports, 
     # which are port numbers less than 1024. 
     CAP_NET_BIND_SERVICE=0 \
@@ -49,7 +49,7 @@ ENV KEEPALIVE=${KEEPALIVE} \
     WORKDIR=${WORKDIR} 
 
 ENV RPC_SECRET= \
-    ARIA2_VERSION=1.37.0-r0
+    ARIA2_VERSION=1.37.0-r1
 
 # Create a user with PUID and PGID
 RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
