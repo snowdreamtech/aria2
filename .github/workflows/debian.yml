@@ -124,19 +124,19 @@ jobs:
             type=ref,enable=${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.event_name != 'schedule' }},priority=600,prefix=,suffix=-debian,event=branch
             type=edge,enable=true,priority=700,prefix=,suffix=-debian,branch=dev
             type=raw,enable=${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name != 'schedule' }},priority=200,prefix=,suffix=,value=debian
-            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=debian
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=ariang-debian
             type=schedule,enable=true,priority=1000,prefix=,suffix=-debian,pattern=nightly
-            type=match,enable=true,priority=800,prefix=,suffix=-debian,pattern=\d+.\d+.\d+,group=0,value=
-            type=match,enable=true,priority=800,prefix=,suffix=-debian,pattern=\d+.\d+,group=0,value=
-            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/debian-0.') && !startsWith(github.ref, 'refs/tags/debian-v0.') && !startsWith(github.ref, 'refs/tags/debian-V0.') }},priority=800,prefix=,suffix=-debian,pattern=\d+,group=0,value=
+            type=match,enable=true,priority=800,prefix=,suffix=-ariang-debian,pattern=\d+.\d+.\d+,group=0,value=
+            type=match,enable=true,priority=800,prefix=,suffix=-ariang-debian,pattern=\d+.\d+,group=0,value=
+            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/debian-0.') && !startsWith(github.ref, 'refs/tags/debian-v0.') && !startsWith(github.ref, 'refs/tags/debian-V0.') }},priority=800,prefix=,suffix=-ariang-debian,pattern=\d+,group=0,value=
             type=ref,enable=${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.event_name != 'schedule' }},priority=600,prefix=,suffix=-trixie,event=branch
             type=edge,enable=true,priority=700,prefix=,suffix=-trixie,branch=dev
             type=raw,enable=${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name != 'schedule' }},priority=200,prefix=,suffix=,value=trixie
-            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=trixie
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/') }},priority=200,prefix=,suffix=,value=ariang-trixie
             type=schedule,enable=true,priority=1000,prefix=,suffix=-trixie,pattern=nightly
-            type=match,enable=true,priority=800,prefix=,suffix=-trixie,pattern=\d+.\d+.\d+,group=0,value=
-            type=match,enable=true,priority=800,prefix=,suffix=-trixie,pattern=\d+.\d+,group=0,value=
-            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/debian-0.') && !startsWith(github.ref, 'refs/tags/debian-v0.') && !startsWith(github.ref, 'refs/tags/debian-V0.') }},priority=800,prefix=,suffix=-trixie,pattern=\d+,group=0,value=
+            type=match,enable=true,priority=800,prefix=,suffix=-ariang-trixie,pattern=\d+.\d+.\d+,group=0,value=
+            type=match,enable=true,priority=800,prefix=,suffix=-ariang-trixie,pattern=\d+.\d+,group=0,value=
+            type=match,enable=${{ !startsWith(github.ref, 'refs/tags/0.') && !startsWith(github.ref, 'refs/tags/v0.') && !startsWith(github.ref, 'refs/tags/V0.') && !startsWith(github.ref, 'refs/tags/debian-0.') && !startsWith(github.ref, 'refs/tags/debian-v0.') && !startsWith(github.ref, 'refs/tags/debian-V0.') }},priority=800,prefix=,suffix=-ariang-trixie,pattern=\d+,group=0,value=
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
       - name: Build and push
