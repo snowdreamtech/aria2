@@ -51,7 +51,7 @@ ENV DEBIAN_FRONTEND=${DEBIAN_FRONTEND} \
     WORKDIR=${WORKDIR} 
 
 ENV RPC_SECRET= \
-    ARIA2_VERSION=1.36.0-1
+    ARIA2_VERSION=1.37.0+debian-3
 
 # Create a user with PUID and PGID
 RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
