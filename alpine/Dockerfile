@@ -1,4 +1,4 @@
-FROM snowdreamtech/alpine:3.22.2
+FROM snowdreamtech/nginx:1.28.0-alpine3.22
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
