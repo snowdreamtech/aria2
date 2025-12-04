@@ -2,15 +2,15 @@ FROM snowdreamtech/debian:13.1.0
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
-    org.opencontainers.image.title="Base Image Based On Debian" \
-    org.opencontainers.image.description="Docker Images for Base on Debian. (i386,amd64,arm32v5,arm32v7,arm64,mips64le,ppc64le,s390x)" \
-    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/base" \
-    org.opencontainers.image.base.name="snowdreamtech/base:debian" \
+    org.opencontainers.image.title="Aria2 Image Based On Debian" \
+    org.opencontainers.image.description="Docker Images for Aria2 on Debian. (i386,amd64,arm32v5,arm32v7,arm64,mips64le,ppc64le,s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/aria2" \
+    org.opencontainers.image.base.name="snowdreamtech/aria2:debian" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.source="https://github.com/snowdreamtech/base" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/aria2" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="13.1.0" \
-    org.opencontainers.image.url="https://github.com/snowdreamtech/base"
+    org.opencontainers.image.version="1.36.0" \
+    org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
 
 # Switch to the user
 USER root
@@ -50,6 +50,9 @@ ENV DEBIAN_FRONTEND=${DEBIAN_FRONTEND} \
     USER=${USER} \
     WORKDIR=${WORKDIR} 
 
+ENV RPC_SECRET= \
+    ARIA2_VERSION=1.36.0-1
+
 # Create a user with PUID and PGID
 RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
     addgroup --gid ${PGID} ${USER}; \
@@ -60,7 +63,10 @@ RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy update  \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy install --no-install-recommends \ 
-    vim \
+    aria2=${ARIA2_VERSION} \     
+    && mkdir -p /var/lib/aria2/.aria2  \
+    && mkdir -p /var/lib/aria2/downloads  \
+    && touch /var/lib/aria2/.aria2/aria2.session \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy --purge autoremove \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy clean \
     && rm -rf /var/lib/apt/lists/* \
@@ -71,6 +77,10 @@ RUN set -eux \
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
 #     # setcap 'cap_net_bind_service=+ep' `which nginx`; \
 #     fi
+
+EXPOSE 6800 6881-6999
+
+COPY aria2.conf /etc/aria2.conf
 
 COPY entrypoint.d /usr/local/bin/entrypoint.d
 

@@ -2,15 +2,15 @@ FROM snowdreamtech/alpine:3.22.2
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
-    org.opencontainers.image.title="Base Image Based On Alpine" \
-    org.opencontainers.image.description="Docker Images for Base on Alpine. (i386, amd64, arm32v6, arm32v7, arm64, ppc64le,riscv64, s390x)" \
-    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/base" \
-    org.opencontainers.image.base.name="snowdreamtech/base:alpine" \
+    org.opencontainers.image.title="Aria2 Image Based On Alpine" \
+    org.opencontainers.image.description="Docker Images for Aria2 on Alpine. (i386, amd64, arm32v6, arm32v7, arm64, ppc64le,riscv64, s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/aria2" \
+    org.opencontainers.image.base.name="snowdreamtech/aria2:alpine" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.source="https://github.com/snowdreamtech/base" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/aria2" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="3.22.2" \
-    org.opencontainers.image.url="https://github.com/snowdreamtech/base"
+    org.opencontainers.image.version="1.37.0" \
+    org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
     
 # Switch to the user
 USER root
@@ -48,6 +48,9 @@ ENV KEEPALIVE=${KEEPALIVE} \
     USER=${USER} \
     WORKDIR=${WORKDIR} 
 
+ENV RPC_SECRET= \
+    ARIA2_VERSION=1.37.0-r0
+
 # Create a user with PUID and PGID
 RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
     addgroup -g ${PGID} ${USER}; \
@@ -57,12 +60,19 @@ RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 
 
 RUN apk update \
     && apk add --no-cache \
-    vim
+    aria2-daemon=${ARIA2_VERSION} \
+    && mkdir -p /var/lib/aria2/.aria2  \
+    && mkdir -p /var/lib/aria2/downloads  \
+    && touch /var/lib/aria2/.aria2/aria2.session  
 
 # Enable CAP_NET_BIND_SERVICE
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
     # setcap 'cap_net_bind_service=+ep' `which nginx`; \
     # fi
+    
+EXPOSE 6800 6881-6999
+
+COPY aria2.conf /etc/aria2.conf
 
 COPY entrypoint.d /usr/local/bin/entrypoint.d
 
