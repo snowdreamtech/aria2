@@ -16,21 +16,25 @@ ARG BUILDTIME \
     PGID=0 \
     PUID=0 \
     USER=root \
-    WORKDIR=/root
+    WORKDIR=/root \
+    ARIA2_VERSION=1.37.0-r2
 
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
-    org.opencontainers.image.title="Base Image Based On Alpine" \
-    org.opencontainers.image.description="Docker Images for Base on Alpine. (i386, amd64, arm32v6, arm32v7, arm64, ppc64le, riscv64, s390x)" \
-    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/base" \
-    org.opencontainers.image.base.name="snowdreamtech/base:alpine" \
+    org.opencontainers.image.title="Aria2 Image Based On Alpine" \
+    org.opencontainers.image.description="Docker Images for Aria2 on Alpine. (386, amd64, arm/v6, arm/v7, arm64, ppc64le, riscv64, s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/aria2" \
+    org.opencontainers.image.base.name="snowdreamtech/alpine:3.24.0" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.source="https://github.com/snowdreamtech/base" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/aria2" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="${VERSION:-3.24.0}" \
     org.opencontainers.image.created="${BUILDTIME}" \
     org.opencontainers.image.revision="${REVISION}" \
-    org.opencontainers.image.url="https://github.com/snowdreamtech/base"
+    org.opencontainers.image.url="https://github.com/snowdreamtech/aria2"
+
+# x-release-please-start-version
+LABEL org.opencontainers.image.version="${VERSION:-1.37.0}"
+# x-release-please-end
 
 # Runtime Environment Configuration
 ENV KEEPALIVE=${KEEPALIVE} \
@@ -42,12 +46,20 @@ ENV KEEPALIVE=${KEEPALIVE} \
     PGID=${PGID} \
     PUID=${PUID} \
     USER=${USER} \
-    WORKDIR=${WORKDIR}
+    WORKDIR=${WORKDIR} \
+    ARIA2_VERSION=${ARIA2_VERSION} \
+    RPC_HASH=
 
 # Additional tooling and configuration for Base image
 RUN apk update \
     && apk add --no-cache \
-    vim
+    aria2-daemon=${ARIA2_VERSION} \
+    vim \
+    && mkdir -p /var/lib/aria2/.aria2 \
+    && mkdir -p /var/lib/aria2/downloads \
+    && touch /var/lib/aria2/.aria2/aria2.session
+
+COPY aria2.conf /etc/aria2.conf
 
 # Container Orchestration Files
 COPY entrypoint.d /usr/local/bin/entrypoint.d
@@ -58,6 +70,7 @@ RUN chmod +x /usr/local/bin/entrypoint.d/*
 HEALTHCHECK NONE
 
 # Process Execution
+EXPOSE 6800 6881-6999
 USER root
 WORKDIR /root
 ENTRYPOINT ["docker-entrypoint.sh"]
