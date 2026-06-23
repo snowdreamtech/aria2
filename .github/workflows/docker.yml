@@ -67,11 +67,13 @@ permissions:
 
 jobs:
   buildx:
-    name: "🚀 Build & Deliver (${{ matrix.variant }})"
+    name: "🚀 Build & Deliver (${{ matrix.flavor }}-${{ matrix.variant }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        flavor: [aria2, ariang, webui]
+        variant: [alpine, debian, rocky]
         include:
           - variant: alpine
             version: "3.24.0"
@@ -94,7 +96,7 @@ jobs:
             is_latest: false
             package_manager: dnf
     concurrency:
-      group: docker-${{ github.workflow }}-${{ github.event_name == 'schedule' && 'nightly' || github.ref }}-${{ matrix.variant }}
+      group: docker-${{ github.workflow }}-${{ github.event_name == 'schedule' && 'nightly' || github.ref }}-${{ matrix.flavor }}-${{ matrix.variant }}
       cancel-in-progress: ${{ github.event_name != 'schedule' }}
     permissions:
       contents: read
@@ -311,25 +313,25 @@ jobs:
             suffix=
           tags: |
             # Branch builds (non-tag pushes) - variant-suffixed branch tag
-            type=ref,enable=${{ github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/') }},priority=600,prefix=,suffix=-${{ matrix.variant }},event=branch
+            type=ref,enable=${{ github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/') }},priority=600,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},event=branch
             # Main/master branch - variant-suffixed tag
-            type=raw,enable=${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && github.event_name != 'schedule' }},priority=200,prefix=,suffix=-${{ matrix.variant }},value=latest
+            type=raw,enable=${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && github.event_name != 'schedule' }},priority=200,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},value=latest
             # Main/master branch - global latest tag (only for is_latest variant, no suffix)
-            type=raw,enable=${{ matrix.is_latest && contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && github.event_name != 'schedule' }},priority=200,prefix=,suffix=,value=latest
+            type=raw,enable=${{ matrix.is_latest && contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && github.event_name != 'schedule' }},priority=200,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},value=latest
             # Tag builds - variant-suffixed tag
-            type=raw,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=200,prefix=,suffix=-${{ matrix.variant }},value=latest
+            type=raw,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=200,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},value=latest
             # Tag builds - global latest tag (only for is_latest variant, no suffix)
-            type=raw,enable=${{ matrix.is_latest && startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=200,prefix=,suffix=,value=latest
+            type=raw,enable=${{ matrix.is_latest && startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=200,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},value=latest
             # Nightly builds - variant-suffixed
-            type=schedule,enable=true,priority=1000,prefix=,suffix=-${{ matrix.variant }},pattern=nightly
+            type=schedule,enable=true,priority=1000,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},pattern=nightly
             # Nightly builds - global nightly tag (only for is_latest variant, no suffix)
-            type=schedule,enable=${{ matrix.is_latest }},priority=1000,prefix=,suffix=,pattern=nightly
+            type=schedule,enable=${{ matrix.is_latest }},priority=1000,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},pattern=nightly
             # Date-based tags for traceability (YYYYMMDD) - variant-suffixed
-            type=schedule,enable=true,priority=900,prefix=,suffix=-${{ matrix.variant }},pattern={{date 'YYYYMMDD'}}
+            type=schedule,enable=true,priority=900,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},pattern={{date 'YYYYMMDD'}}
             # Date-based tags - global tag (only for is_latest variant, no suffix)
-            type=schedule,enable=${{ matrix.is_latest }},priority=900,prefix=,suffix=,pattern={{date 'YYYYMMDD'}}
+            type=schedule,enable=${{ matrix.is_latest }},priority=900,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},pattern={{date 'YYYYMMDD'}}
             # Semantic version tags from Release Please (variant-x.y.z) - variant-suffixed
-            type=match,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=-${{ matrix.variant }},pattern=${{ matrix.variant }}-v?(\d+\.\d+\.\d+),group=1
+            type=match,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},pattern=${{ matrix.variant }}-v?(\d+\.\d+\.\d+),group=1
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
 
@@ -339,6 +341,7 @@ jobs:
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/Dockerfile.${{ matrix.flavor }}
           build-args: |
             BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
@@ -351,10 +354,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: |
-            type=gha,scope=${{ github.ref_name }}-${{ matrix.variant }}
-            type=gha,scope=main-${{ matrix.variant }}
-            type=gha,scope=dev-${{ matrix.variant }}
-          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-${{ matrix.variant }}
+            type=gha,scope=${{ github.ref_name }}-${{ matrix.flavor }}-${{ matrix.variant }}
+            type=gha,scope=main-${{ matrix.flavor }}-${{ matrix.variant }}
+            type=gha,scope=dev-${{ matrix.flavor }}-${{ matrix.variant }}
+          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-${{ matrix.flavor }}-${{ matrix.variant }}
 
       - name: "📈 Analyze Build Cache Performance"
         id: cache-stats
