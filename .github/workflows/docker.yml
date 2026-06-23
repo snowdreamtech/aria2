@@ -489,6 +489,7 @@ jobs:
             # Execute comprehensive test suite
             if docker run --rm \
               -e DEBUG=false \
+              -e KEEPALIVE=0 \
               -e TZ=Asia/Shanghai \
               -e PUID=1000 \
               -e PGID=1000 \
