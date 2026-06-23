@@ -6,4 +6,3 @@
 ### 🚀 Features
 
 * restructure to multi-flavor docker matrix (aria2, ariang, webui) ([3313ed3](https://github.com/snowdreamtech/aria2/commit/3313ed34e033feda1b8cab67566c69b1d782f49f))
-

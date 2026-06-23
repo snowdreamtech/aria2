@@ -86,7 +86,7 @@ RUN chmod +x /usr/local/bin/entrypoint.d/*
 HEALTHCHECK NONE
 
 # Process Execution
-EXPOSE 6800 6881-6999
+EXPOSE 80 443 6800 6881-6999
 USER root
 WORKDIR /root
 ENTRYPOINT ["docker-entrypoint.sh"]
