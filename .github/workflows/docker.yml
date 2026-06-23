@@ -302,9 +302,9 @@ jobs:
         uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
         with:
           images: |
-            name=snowdreamtech/base,enable=true
-            name=ghcr.io/snowdreamtech/base,enable=true
-            name=quay.io/snowdreamtech/base,enable=true
+            name=snowdreamtech/aria2,enable=true
+            name=ghcr.io/snowdreamtech/aria2,enable=true
+            name=quay.io/snowdreamtech/aria2,enable=true
           flavor: |
             latest=false
             prefix=
@@ -484,6 +484,7 @@ jobs:
                 printf '  ✓ User context: ' && id -un && \
                 printf '  ✓ Package manager: ' && \
                 ${pkg_check} && echo 'functional' && \
+                printf '  ✓ App version: ' && aria2c -v | head -n 1 && \
                 echo '  ✓ All checks passed'
               "; then
               return 0
@@ -593,7 +594,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
         with:
           sarif_file: "trivy-image-${{ matrix.variant }}.sarif"
-          category: "trivy-image-base-${{ matrix.variant }}"
+          category: "trivy-image-aria2-${{ matrix.variant }}"
 
       - name: "🗑️ Clean Up Build Artifacts"
         if: steps.variant-filter.outputs.skip != 'true' && always()
