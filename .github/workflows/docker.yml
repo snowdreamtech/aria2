@@ -298,6 +298,18 @@ jobs:
             exit 1
           fi
 
+      - name: "🏷️ Compute Tag Suffixes"
+        id: tag-suffix
+        if: steps.variant-filter.outputs.skip != 'true'
+        run: |
+          if [ "${{ matrix.flavor }}" = "aria2" ]; then
+            echo "suffix=-${{ matrix.variant }}" >> $GITHUB_OUTPUT
+            echo "global_suffix=" >> $GITHUB_OUTPUT
+          else
+            echo "suffix=-${{ matrix.flavor }}-${{ matrix.variant }}" >> $GITHUB_OUTPUT
+            echo "global_suffix=-${{ matrix.flavor }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: "🏷️ Generate Docker Metadata"
         if: steps.variant-filter.outputs.skip != 'true'
         id: meta
