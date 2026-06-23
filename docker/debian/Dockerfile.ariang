@@ -8,7 +8,7 @@ ARG BUILDTIME \
     VERSION \
     REVISION \
     DEBIAN_FRONTEND=noninteractive \
-    KEEPALIVE=0 \
+    KEEPALIVE=1 \
     CAP_NET_BIND_SERVICE=0 \
     LANG=C.UTF-8 \
     UMASK=022 \

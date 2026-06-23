@@ -7,7 +7,7 @@ FROM snowdreamtech/alpine:3.24.0
 ARG BUILDTIME \
     VERSION \
     REVISION \
-    KEEPALIVE=0 \
+    KEEPALIVE=1 \
     CAP_NET_BIND_SERVICE=0 \
     LANG=C.UTF-8 \
     UMASK=022 \
