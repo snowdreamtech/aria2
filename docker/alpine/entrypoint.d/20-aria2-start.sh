@@ -4,10 +4,11 @@ set -e
 if [ "$DEBUG" = "true" ]; then echo "→ [aria2] Starting aria2..."; fi
 
 # openssl rand -base64 33
-if [ -z "${RPC_HASH}" ]; then {
+if [ -z "${RPC_HASH}" ]; then
+  {
     RPC_HASH=$(openssl rand -base64 33)
     echo "Generate random aria2 rpc secret: ${RPC_HASH}"
-}
+  }
 fi
 
 # aria2c
