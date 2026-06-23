@@ -5,6 +5,13 @@
 
 ### 🚀 Features
 
+* restructure to multi-flavor docker matrix (aria2, ariang, webui) ([3313ed3](https://github.com/snowdreamtech/aria2/commit/3313ed34e033feda1b8cab67566c69b1d782f49f))
+
+## [1.37.0](https://github.com/snowdreamtech/aria2/compare/alpine-v1.37.0...alpine-v1.37.0) (2026-06-23)
+
+
+### 🚀 Features
+
 * **docker:** configure aria2 versions and configurations ([80833e5](https://github.com/snowdreamtech/aria2/commit/80833e5b6bbda257b69d9ee47b8af9ea159456d6))
 
 
