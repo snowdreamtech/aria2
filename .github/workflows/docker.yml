@@ -344,6 +344,8 @@ jobs:
             type=schedule,enable=${{ matrix.is_latest }},priority=900,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},pattern={{date 'YYYYMMDD'}}
             # Semantic version tags from Release Please (variant-x.y.z) - variant-suffixed
             type=match,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},pattern=${{ matrix.variant }}-v?(\d+\.\d+\.\d+),group=1
+            # Semantic version tags - global tag (only for is_latest variant, no suffix)
+            type=match,enable=${{ matrix.is_latest && startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},pattern=${{ matrix.variant }}-v?(\d+\.\d+\.\d+),group=1
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
 
