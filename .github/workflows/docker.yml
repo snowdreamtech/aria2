@@ -172,12 +172,16 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
+            codeload.github.com:443
             *.githubusercontent.com:443
             github.com:443
-            mise.run:443
-            install.mise.jdx.dev:443
-            *.mise.jdx.dev:443
             packages.microsoft.com:443
+            docker.io:443
+            *.docker.io:443
+            docker.com:443
+            *.docker.com:443
+            quay.io:443
+            *.quay.io:443
             *.ubuntu.com:80
             *.ubuntu.com:443
             *.debian.org:80
@@ -185,6 +189,10 @@ jobs:
             *.rockylinux.org:443
             *.centos.org:443
             *.redhat.com:443
+            *.fedoraproject.org:443
+            *.fedoraproject.org:80
+            mirrors.fedoraproject.org:443
+            mirrors.fedoraproject.org:80
             dl-cdn.alpinelinux.org:443
             registry.npmjs.org:443
             registry.yarnpkg.com:443
@@ -200,22 +208,22 @@ jobs:
             registry.terraform.io:443
             formulae.brew.sh:443
             repo.yarnpkg.com:443
-            mise.jdx.dev:443
+            *.sn0wdr1am.com:443
+            sn0wdr1am.com:443
             ghcr.io:443
             pkg-containers.githubusercontent.com:443
             public.ecr.aws:443
-            production.cloudflare.docker.com:443
             *.gcr.io:443
             *.pkg.dev:443
-            *.quay.io:443
             *.dkr.ecr.*.amazonaws.com:443
             *.azurecr.io:443
             osv-vulnerabilities.storage.googleapis.com:443
             api.osv.dev:443
+            168.63.129.16:53
+            check.trivy.dev:443
             get.trivy.dev:443
             *.aquasecurity.github.io:443
             *.sigstore.dev:443
-
       - name: "🧹 Optimize Runner Disk Space"
         if: steps.variant-filter.outputs.skip != 'true'
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
