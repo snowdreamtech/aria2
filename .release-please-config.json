@@ -13,6 +13,16 @@
           "type": "generic",
           "path": "Dockerfile.aria2",
           "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "Dockerfile.ariang",
+          "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "Dockerfile.webui",
+          "glob": false
         }
       ]
     },
@@ -28,6 +38,16 @@
           "type": "generic",
           "path": "Dockerfile.aria2",
           "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "Dockerfile.ariang",
+          "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "Dockerfile.webui",
+          "glob": false
         }
       ]
     },
@@ -42,6 +62,16 @@
         {
           "type": "generic",
           "path": "Dockerfile.aria2",
+          "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "Dockerfile.ariang",
+          "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "Dockerfile.webui",
           "glob": false
         }
       ]
