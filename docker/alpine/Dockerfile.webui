@@ -67,7 +67,7 @@ RUN apk update \
     && rm -rfv /var/lib/nginx/html/* \
     && cp -rfv ./webui-aria2-master/docs/* /var/lib/nginx/html/ \
     && rm -rfv master.zip \
-    && rm -rfv webui-aria2-master \
+    && rm -rfv webui-aria2-master
 
 COPY aria2.conf /etc/aria2.conf
 
