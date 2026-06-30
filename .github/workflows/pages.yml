@@ -138,7 +138,7 @@ jobs:
             fulcio.sigstore.dev:443
             api.sigstore.dev:443
       - name: "📂 Checkout Repository Code"
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         # Fetches source documentation and site assets for the build process.
         with:
           persist-credentials: false
@@ -146,7 +146,7 @@ jobs:
       - name: "⚡ Setup UniRTM"
         uses: snowdreamtech/setup-unirtm@cacfb4d739ee46d4a4b2528b02b508df2f560706 # v0.4.0
         with:
-          unirtm-version: "0.25.0"
+          unirtm-version: "0.25.3"
           install: true
           trust: true
         env:

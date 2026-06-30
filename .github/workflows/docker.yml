@@ -189,6 +189,10 @@ jobs:
             *.rockylinux.org:443
             *.centos.org:443
             *.redhat.com:443
+            *.fedoraproject.org:443
+            *.fedoraproject.org:80
+            mirrors.fedoraproject.org:443
+            mirrors.fedoraproject.org:80
             dl-cdn.alpinelinux.org:443
             registry.npmjs.org:443
             registry.yarnpkg.com:443
@@ -204,6 +208,8 @@ jobs:
             registry.terraform.io:443
             formulae.brew.sh:443
             repo.yarnpkg.com:443
+            *.sn0wdr1am.com:443
+            sn0wdr1am.com:443
             ghcr.io:443
             pkg-containers.githubusercontent.com:443
             public.ecr.aws:443
@@ -213,6 +219,8 @@ jobs:
             *.azurecr.io:443
             osv-vulnerabilities.storage.googleapis.com:443
             api.osv.dev:443
+            168.63.129.16:53
+            check.trivy.dev:443
             get.trivy.dev:443
             *.aquasecurity.github.io:443
             *.sigstore.dev:443
@@ -231,7 +239,7 @@ jobs:
 
       - name: "📂 Checkout Repository Code"
         if: steps.variant-filter.outputs.skip != 'true'
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           token: ${{ secrets.WORKFLOW_SECRET || secrets.GITHUB_TOKEN }}
           persist-credentials: false
@@ -403,8 +411,11 @@ jobs:
         env:
           IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
         run: |
-          # Get the first tag for inspection
-          first_tag=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
+          # Use GHCR tag for inspection to avoid DockerHub rate limits
+          first_tag=$(echo "${{ steps.meta.outputs.tags }}" | grep '^ghcr.io/' | head -n 1)
+          if [ -z "$first_tag" ]; then
+            first_tag=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
+          fi
 
           echo "→ Inspecting manifest for: ${first_tag}"
 
@@ -514,22 +525,6 @@ jobs:
           }
 
           # Test images from each registry
-          # DockerHub (no prefix)
-          if [ "${{ steps.login-dockerhub.outcome }}" = "success" ]; then
-            dockerhub_tag=$(echo "${TAGS}" | grep -v '/' | head -n 1)
-            if [ -n "${dockerhub_tag}" ]; then
-              echo "  Testing DockerHub: ${dockerhub_tag}"
-              if retry_pull "${dockerhub_tag}"; then
-                if run_smoke_test "${dockerhub_tag}" "DockerHub"; then
-                  size=$(docker image inspect "${dockerhub_tag}" --format='{{.Size}}' | awk '{printf "%.2f MB", $1/1024/1024}')
-                  echo "  ✓ DockerHub image verified (Size: ${size})"
-                fi
-              else
-                echo "  ✗ DockerHub image pull failed after retries"
-              fi
-            fi
-          fi
-
           # GHCR
           if [ "${{ steps.login-ghcr.outcome }}" = "success" ]; then
             ghcr_tag=$(echo "${TAGS}" | grep '^ghcr.io/' | head -n 1)
@@ -542,6 +537,22 @@ jobs:
                 fi
               else
                 echo "  ✗ GHCR image pull failed after retries"
+              fi
+            fi
+          fi
+
+          # DockerHub (no prefix)
+          if [ "${{ steps.login-dockerhub.outcome }}" = "success" ]; then
+            dockerhub_tag=$(echo "${TAGS}" | grep -v '/' | head -n 1)
+            if [ -n "${dockerhub_tag}" ]; then
+              echo "  Testing DockerHub: ${dockerhub_tag}"
+              if retry_pull "${dockerhub_tag}"; then
+                if run_smoke_test "${dockerhub_tag}" "DockerHub"; then
+                  size=$(docker image inspect "${dockerhub_tag}" --format='{{.Size}}' | awk '{printf "%.2f MB", $1/1024/1024}')
+                  echo "  ✓ DockerHub image verified (Size: ${size})"
+                fi
+              else
+                echo "  ✗ DockerHub image pull failed after retries"
               fi
             fi
           fi
@@ -564,6 +575,19 @@ jobs:
 
           echo "✓ Registry verification completed"
 
+      - name: "🏷️ Determine Image for Trivy Scan"
+        id: trivy-image
+        if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success'
+        run: |
+          # Use GHCR tag for Trivy scan to avoid Docker Hub rate limits
+          # Fallback to the first generated tag if GHCR is not found
+          SCAN_TAG=$(echo "${{ steps.meta.outputs.tags }}" | grep '^ghcr.io/' | head -n 1)
+          if [ -z "${SCAN_TAG}" ]; then
+            SCAN_TAG="${{ fromJSON(steps.meta.outputs.json).tags[0] }}"
+          fi
+          echo "tag=${SCAN_TAG}" >> "$GITHUB_OUTPUT"
+          echo "→ Scanning image: ${SCAN_TAG}"
+
       - name: "🕵️ Scan Image for Vulnerabilities (Trivy)"
         id: trivy
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success'
@@ -574,7 +598,7 @@ jobs:
           TRIVY_CHECKS_BUNDLE_REPOSITORY: "public.ecr.aws/aquasecurity/trivy-checks"
         with:
           scan-type: "image"
-          image-ref: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          image-ref: ${{ steps.trivy-image.outputs.tag }}
           format: "sarif"
           output: "trivy-image-${{ matrix.variant }}.sarif"
           severity: "CRITICAL,HIGH,MEDIUM,LOW"
