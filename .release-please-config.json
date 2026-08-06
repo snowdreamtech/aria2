@@ -11,6 +11,11 @@
       "extra-files": [
         {
           "type": "generic",
+          "path": "../../.github/workflows/docker.yml",
+          "glob": false
+        },
+        {
+          "type": "generic",
           "path": "Dockerfile.aria2",
           "glob": false
         },
@@ -36,6 +41,11 @@
       "extra-files": [
         {
           "type": "generic",
+          "path": "../../.github/workflows/docker.yml",
+          "glob": false
+        },
+        {
+          "type": "generic",
           "path": "Dockerfile.aria2",
           "glob": false
         },
@@ -59,6 +69,11 @@
       "changelog-path": "CHANGELOG.md",
       "exclude-paths": ["docker/rocky/CHANGELOG.md"],
       "extra-files": [
+        {
+          "type": "generic",
+          "path": "../../.github/workflows/docker.yml",
+          "glob": false
+        },
         {
           "type": "generic",
           "path": "Dockerfile.aria2",
