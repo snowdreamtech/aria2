@@ -74,9 +74,9 @@ docker run -d \
   snowdreamtech/aria2:debian
 ```
 
-**支持的架构**：i386、amd64、arm32v5、arm32v7、arm64、mips64le、ppc64le、s390x
+**支持的架构**：i386、amd64、arm32v5、arm32v7、arm64、ppc64le、riscv64、s390x
 
-**基础镜像**：`snowdreamtech/debian:13.5.0`
+**基础镜像**：`snowdreamtech/debian:latest`
 
 ### Alpine
 
@@ -95,7 +95,7 @@ docker run -d \
 
 **支持的架构**：i386、amd64、arm32v6、arm32v7、arm64、ppc64le、riscv64、s390x
 
-**基础镜像**：`snowdreamtech/alpine:3.24.0`
+**基础镜像**：`snowdreamtech/alpine:latest`
 
 ### Rocky
 
@@ -112,9 +112,9 @@ docker run -d \
   snowdreamtech/aria2:rocky
 ```
 
-**支持的架构**：i386、amd64、arm32v5、arm32v7、arm64、mips64le、ppc64le、s390x
+**支持的架构**：amd64、arm64、ppc64le、s390x
 
-**基础镜像**：`snowdreamtech/rocky:10.2.0`
+**基础镜像**：`snowdreamtech/rocky:latest`
 
 ## 构建说明
 
@@ -233,9 +233,9 @@ docker run -d \
 
 | 变体 | 架构 |
 |---------|---------------|
-| **Debian** | i386、amd64、arm32v5、arm32v7、arm64、mips64le、ppc64le、s390x |
+| **Debian** | i386、amd64、arm32v5、arm32v7、arm64、ppc64le、riscv64、s390x |
 | **Alpine** | i386、amd64、arm32v6、arm32v7、arm64、ppc64le、riscv64、s390x |
-| **Rocky** | i386、amd64、arm32v5、arm32v7、arm64、mips64le、ppc64le、s390x |
+| **Rocky** | amd64、arm64、ppc64le、s390x |
 
 Docker 在拉取镜像时会自动为您的平台选择适当的架构。
 
