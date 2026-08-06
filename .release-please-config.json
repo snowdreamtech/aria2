@@ -13,21 +13,6 @@
           "type": "yaml",
           "path": ".github/workflows/docker.yml",
           "jsonpath": "$.jobs.buildx.strategy.matrix.include[0].version"
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.aria2",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.ariang",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.webui",
-          "glob": false
         }
       ]
     },
@@ -43,21 +28,6 @@
           "type": "yaml",
           "path": ".github/workflows/docker.yml",
           "jsonpath": "$.jobs.buildx.strategy.matrix.include[1].version"
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.aria2",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.ariang",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.webui",
-          "glob": false
         }
       ]
     },
@@ -73,21 +43,6 @@
           "type": "yaml",
           "path": ".github/workflows/docker.yml",
           "jsonpath": "$.jobs.buildx.strategy.matrix.include[2].version"
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.aria2",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.ariang",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "Dockerfile.webui",
-          "glob": false
         }
       ]
     }
