@@ -171,7 +171,6 @@ jobs:
           echo "timestamp=$(date -u +%s)" >> "$GITHUB_OUTPUT"
           echo "datetime=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
 
-
       - name: "🧹 Optimize Runner Disk Space"
         if: steps.variant-filter.outputs.skip != 'true'
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
@@ -264,6 +263,24 @@ jobs:
             echo "is_stable=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: "🏷️ Compute Tag Suffixes"
+        id: tag-suffix
+        if: steps.variant-filter.outputs.skip != 'true'
+        run: |
+          if [ "${{ matrix.flavor }}" = "aria2" ]; then
+            echo "suffix=-${{ matrix.variant }}" >> "$GITHUB_OUTPUT"
+            echo "global_suffix=" >> "$GITHUB_OUTPUT"
+          elif [ "${{ matrix.flavor }}" = "ariang" ]; then
+            echo "suffix=-ariang-${{ matrix.variant }}" >> "$GITHUB_OUTPUT"
+            echo "global_suffix=-ariang" >> "$GITHUB_OUTPUT"
+          elif [ "${{ matrix.flavor }}" = "webui" ]; then
+            echo "suffix=-webui-${{ matrix.variant }}" >> "$GITHUB_OUTPUT"
+            echo "global_suffix=-webui" >> "$GITHUB_OUTPUT"
+          else
+            echo "suffix=-${{ matrix.flavor }}-${{ matrix.variant }}" >> "$GITHUB_OUTPUT"
+            echo "global_suffix=-${{ matrix.flavor }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: "🏷️ Generate Docker Metadata"
         if: steps.variant-filter.outputs.skip != 'true'
         id: meta
@@ -283,17 +300,19 @@ jobs:
             # Main/master branch - variant-suffixed tag
             type=raw,enable=${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && github.event_name != 'schedule' }},priority=200,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},value=latest
             # Main/master branch - global latest tag (only for is_latest variant, no suffix)
-            type=raw,enable=${{ matrix.is_latest && contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && github.event_name != 'schedule' }},priority=200,prefix=,suffix=,value=latest
+            type=raw,enable=${{ matrix.is_latest && contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && github.event_name != 'schedule' }},priority=200,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},value=latest
             # Tag builds - variant-suffixed tag (stable only)
-            type=raw,enable=${{ steps.tag-check.outputs.is_stable == 'true' }},priority=200,prefix=,suffix=-${{ matrix.variant }},value=latest
+            type=raw,enable=${{ steps.tag-check.outputs.is_stable == 'true' }},priority=200,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},value=latest
             # Tag builds - global latest tag (only for is_latest variant, no suffix, stable only)
-            type=raw,enable=${{ matrix.is_latest && steps.tag-check.outputs.is_stable == 'true' }},priority=200,prefix=,suffix=,value=latest
+            type=raw,enable=${{ matrix.is_latest && steps.tag-check.outputs.is_stable == 'true' }},priority=200,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},value=latest
             # Nightly builds - variant-suffixed
             type=schedule,enable=true,priority=1000,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},pattern=nightly
             # Nightly builds - global nightly tag (only for is_latest variant, no suffix)
-            type=schedule,enable=${{ matrix.is_latest }},priority=1000,prefix=,suffix=,pattern=nightly
+            type=schedule,enable=${{ matrix.is_latest }},priority=1000,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},pattern=nightly
             # Semantic version tags from Release Please (variant-x.y.z) - variant-suffixed
-            type=match,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=-${{ matrix.variant }},pattern=${{ matrix.variant }}-v?(.*),group=1
+            type=match,enable=${{ startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=${{ steps.tag-suffix.outputs.suffix }},pattern=${{ matrix.variant }}-v?(.*),group=1
+            # Semantic version tags - global tag (only for is_latest variant, no suffix)
+            type=match,enable=${{ matrix.is_latest && startsWith(github.ref, format('refs/tags/{0}-', matrix.variant)) }},priority=800,prefix=,suffix=${{ steps.tag-suffix.outputs.global_suffix }},pattern=${{ matrix.variant }}-v?(.*),group=1
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
 
@@ -539,7 +558,7 @@ jobs:
           scan-type: "image"
           image-ref: ${{ steps.trivy-image.outputs.tag }}
           format: "sarif"
-          output: "trivy-image-${{ matrix.variant }}.sarif"
+          output: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif"
           severity: "CRITICAL,HIGH,MEDIUM,LOW"
           ignore-unfixed: true
           exit-code: "0"
@@ -551,10 +570,10 @@ jobs:
         if: steps.variant-filter.outputs.skip != 'true' && steps.build.conclusion == 'success' && steps.trivy.outcome == 'success'
         continue-on-error: true
         run: |
-          if [ -f "trivy-image-${{ matrix.variant }}.sarif" ]; then
-            critical=$(jq '[.runs[].results[] | select(.level=="error")] | length' trivy-image-${{ matrix.variant }}.sarif)
-            high=$(jq '[.runs[].results[] | select(.level=="warning")] | length' trivy-image-${{ matrix.variant }}.sarif)
-            medium=$(jq '[.runs[].results[] | select(.level=="note")] | length' trivy-image-${{ matrix.variant }}.sarif)
+          if [ -f "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif" ]; then
+            critical=$(jq '[.runs[].results[] | select(.level=="error")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
+            high=$(jq '[.runs[].results[] | select(.level=="warning")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
+            medium=$(jq '[.runs[].results[] | select(.level=="note")] | length' trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif)
             {
               echo "critical=${critical}"
               echo "high=${high}"
@@ -575,8 +594,8 @@ jobs:
         continue-on-error: true
         uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
         with:
-          sarif_file: "trivy-image-${{ matrix.variant }}.sarif"
-          category: "trivy-image-aria2-${{ matrix.variant }}"
+          sarif_file: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}.sarif"
+          category: "trivy-image-${{ matrix.flavor }}-${{ matrix.variant }}"
 
       - name: "🗑️ Clean Up Build Artifacts"
         if: steps.variant-filter.outputs.skip != 'true' && always()
@@ -625,6 +644,7 @@ jobs:
             if cosign sign --yes \
               -a "build-id=${BUILD_ID}" \
               -a "commit=${COMMIT_SHA}" \
+              -a "flavor=${{ matrix.flavor }}" \
               -a "variant=${{ matrix.variant }}" \
               -a "version=${{ matrix.version }}" \
               -a "workflow=${GITHUB_WORKFLOW}" \
@@ -669,6 +689,7 @@ jobs:
           {
             echo "## 🐳 Docker Build Summary"
             echo ""
+            echo "**Flavor:** ${{ matrix.flavor }}"
             echo "**Variant:** ${{ matrix.variant }}"
             echo "**Version:** ${{ matrix.version }}"
             echo "**Build Status:** ${{ steps.build.conclusion }}"
@@ -719,6 +740,7 @@ jobs:
               echo ""
               echo "### 🏗️ Build Configuration"
               echo ""
+              echo "- **Flavor:** ${{ matrix.flavor }}"
               echo "- **Variant:** ${{ matrix.variant }}"
               echo "- **OS Version:** ${{ matrix.version }}"
               # Set platform count based on variant
@@ -762,7 +784,7 @@ jobs:
                 case "${{ github.ref }}" in
                   refs/tags/*)
                     echo "**Tag:** \`${{ github.ref }}\`"
-                    echo "**Expected pattern:** \`${{ matrix.variant }}-*\`"
+                    echo "**Expected pattern:** \`${{ matrix.variant }}-*\` or \`${{ matrix.flavor }}-${{ matrix.variant }}-*\`"
                     ;;
                 esac
               fi
@@ -782,15 +804,15 @@ jobs:
       - name: "⚠️ Annotate Build Failure"
         if: steps.variant-filter.outputs.skip != 'true' && failure()
         run: |
-          echo "::error title=Docker Build Failed (${{ matrix.variant }} ${{ matrix.version }})::The multi-platform Docker build failed. Check the workflow logs for details."
+          echo "::error title=Docker Build Failed (${{ matrix.flavor }}-${{ matrix.variant }} ${{ matrix.version }})::The multi-platform Docker build failed. Check the workflow logs for details."
 
           # Detailed failure annotations
           if [ "${{ steps.build.conclusion }}" = "failure" ]; then
-            echo "::error title=Build Step Failed::Docker build process failed for ${{ matrix.variant }} ${{ matrix.version }}"
+            echo "::error title=Build Step Failed::Docker build process failed for ${{ matrix.flavor }}-${{ matrix.variant }} ${{ matrix.version }}"
           fi
 
           if [ "${{ steps.trivy.conclusion }}" = "failure" ]; then
-            echo "::error title=Security Scan Failed::Trivy vulnerability scan failed for ${{ matrix.variant }} ${{ matrix.version }}"
+            echo "::error title=Security Scan Failed::Trivy vulnerability scan failed for ${{ matrix.flavor }}-${{ matrix.variant }} ${{ matrix.version }}"
           fi
 
           if [ "${{ steps.login-dockerhub.outcome }}" != "success" ] && \
