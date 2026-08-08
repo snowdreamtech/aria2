@@ -29,4 +29,3 @@
 * **release:** deduplicate CHANGELOG headers ([4f07b71](https://github.com/snowdreamtech/aria2/commit/4f07b71194f58ba214f1fb60ce0dc56d71c499e2))
 * **release:** deduplicate CHANGELOG headers ([3068d88](https://github.com/snowdreamtech/aria2/commit/3068d883bc6167773d046d3b2b0e4c479e4fee39))
 * **speckit:** manual auto-commit trigger ([5f8a5a9](https://github.com/snowdreamtech/aria2/commit/5f8a5a9cba5d6bd42a65eaabfecd6e18b01aeeb0))
-

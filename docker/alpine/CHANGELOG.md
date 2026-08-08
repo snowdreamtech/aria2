@@ -28,4 +28,3 @@
 * **release:** deduplicate CHANGELOG headers ([c2bba24](https://github.com/snowdreamtech/aria2/commit/c2bba247dca89a31accc6e70c5e48b16170b1ce5))
 * **release:** deduplicate CHANGELOG headers ([4f07b71](https://github.com/snowdreamtech/aria2/commit/4f07b71194f58ba214f1fb60ce0dc56d71c499e2))
 * update alpine base image to 3.24.1 ([3021ed3](https://github.com/snowdreamtech/aria2/commit/3021ed3b4ffa5f8916f5fa46aa4325e8ebf84ba6))
-
