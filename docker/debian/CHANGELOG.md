@@ -10,32 +10,3 @@
 * **release:** deduplicate CHANGELOG headers ([a186680](https://github.com/snowdreamtech/aria2/commit/a186680625ac23b3ebbdf41e75a7370f38e03d22))
 * sync debian build matrix and documentation with upstream ([0d6e613](https://github.com/snowdreamtech/aria2/commit/0d6e6132c84a368f5b64b9144d9c7d3b7292d746))
 
-## [1.37.0](https://github.com/snowdreamtech/aria2/compare/debian-v1.37.0...debian-v1.37.0) (2026-08-06)
-
-
-### 🚀 Features
-
-* support multi-flavor Docker builds with enhanced tagging and metadata logic ([a7d03b4](https://github.com/snowdreamtech/aria2/commit/a7d03b42a70ce41053d2222f3db172a5949f6fa8))
-* support new CPU architectures, add extensive custom pre-commit scripts, and disable GitHub Pages deployment ([de67802](https://github.com/snowdreamtech/aria2/commit/de6780227539ddd59bf161d34afc92cd1a7786e4))
-
-
-### 🐛 Bug Fixes
-
-* remove static version defaults from OCI image labels to use variable injection exclusively ([da5645a](https://github.com/snowdreamtech/aria2/commit/da5645ad4d48467290235abbbd9f31ba70bf690f))
-
-
-### 🛠 Refactoring
-
-* **config:** align release-please and Dockerfile configurations with base images ([e626df9](https://github.com/snowdreamtech/aria2/commit/e626df96d9cea47cae52b93fa6ce84a128e2422d))
-
-
-### ♻️ Miscellaneous Chores
-
-* add 0-git-keep.sh to prevent empty entrypoint.d directories ([ce77247](https://github.com/snowdreamtech/aria2/commit/ce77247762becc1edf85ec7b57747d3f3127044a))
-* release main ([5a92edb](https://github.com/snowdreamtech/aria2/commit/5a92edb4ba76b04ee6de7369e9471f785849a7ae))
-* release main ([4011a21](https://github.com/snowdreamtech/aria2/commit/4011a21a23395acc9545168c95ca0ec5c867e7d3))
-* release main ([d52be5c](https://github.com/snowdreamtech/aria2/commit/d52be5cf0c5cff45f7f72e973d62c94b48855e1b))
-* **release:** deduplicate CHANGELOG headers ([4f07b71](https://github.com/snowdreamtech/aria2/commit/4f07b71194f58ba214f1fb60ce0dc56d71c499e2))
-* **release:** deduplicate CHANGELOG headers ([3068d88](https://github.com/snowdreamtech/aria2/commit/3068d883bc6167773d046d3b2b0e4c479e4fee39))
-* **speckit:** manual auto-commit trigger ([5f8a5a9](https://github.com/snowdreamtech/aria2/commit/5f8a5a9cba5d6bd42a65eaabfecd6e18b01aeeb0))
-* update debian base image to 13.6.0 ([5f885d5](https://github.com/snowdreamtech/aria2/commit/5f885d5a771f06d449533f2f3c619d27444822f5))
