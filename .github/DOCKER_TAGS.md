@@ -17,7 +17,6 @@ All tags are pushed to three registries:
 
 - **DockerHub**: `snowdreamtech/base:TAG`
 - **GitHub Container Registry**: `ghcr.io/snowdreamtech/base:TAG`
-- **Quay.io**: `quay.io/snowdreamtech/base:TAG`
 
 ## Tag Scenarios
 
@@ -275,7 +274,6 @@ The key configuration that enables this tagging strategy:
 images: |
   name=snowdreamtech/base,enable=true
   name=ghcr.io/snowdreamtech/base,enable=true
-  name=quay.io/snowdreamtech/base,enable=true
 flavor: |
   latest=false
   prefix=
