@@ -90,7 +90,7 @@ jobs:
         shell: sh
         run: |
           # 1. Update lockfile for all platforms
-          unirtm lock --all-platforms
+          unirtm lock --all-platforms --allow-incomplete
           # 2. Double-check lockfile integrity (fails if tools are omitted due to API errors)
           unirtm lock --check
         env:
